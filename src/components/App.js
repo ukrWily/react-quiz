@@ -8,6 +8,8 @@ import Question from "./Question";
 import NextQuestionButton from "./NextQuestionButton";
 import Progress from "./Progress";
 import FinishedScreen from "./FinishedScreen";
+import Footer from "./Footer";
+import Timer from "./Timer";
 
 const initialState = {
   questions: [],
@@ -45,6 +47,8 @@ const reducer = (state, action) => {
         status: "finished",
         highScore: Math.max(state.points, state.highScore),
       };
+    case "restart":
+      return { ...initialState, questions: state.questions, status: "ready" };
     default:
       throw new Error("Unknown action type");
   }
@@ -90,12 +94,15 @@ export default function App() {
               answer={answer}
               dispatch={dispatch}
             />
-            <NextQuestionButton
-              dispatch={dispatch}
-              answer={answer}
-              index={index}
-              questions={questions}
-            />
+            <Footer>
+              <Timer />
+              <NextQuestionButton
+                dispatch={dispatch}
+                answer={answer}
+                index={index}
+                questions={questions}
+              />
+            </Footer>
           </>
         )}
         {status === "finished" && (
@@ -103,6 +110,7 @@ export default function App() {
             points={points}
             maxPossiblePoints={maxPossiblePoints}
             highScore={highScore}
+            dispatch={dispatch}
           />
         )}
       </Main>
